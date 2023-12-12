@@ -1,12 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const userRoute = require("./Routes/userRoute");
 
 const app = express();
 require("dotenv").config();
 
 app.use(express.json());
 app.use(cors());
+app.use("/api/users", userRoute);
 
 app.get("/", (req, res) => {
     res.send("Welcome to our chat APIs..")
@@ -20,8 +22,8 @@ app.listen(port, (req, res) => {
 });
 
 mongoose.connect(uri
-//     ,{
-//         useNewUrlParser: true,
-//         useUnifiedTopology: true
-// } Deprecated
+    //     ,{
+    //         useNewUrlParser: true,
+    //         useUnifiedTopology: true
+    // } Deprecated
 ).then(() => console.log("MongoDB connection established")).catch((error) => console.log("MongoDB connection failed: ", error.message))
