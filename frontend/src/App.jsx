@@ -11,7 +11,7 @@ function App() {
   return (
     <>
       <NavBar></NavBar>
-      <Container className="text-secondary">
+      <Container>
         <Routes>
           <Route path="/" element={<Chat></Chat>}></Route>
           <Route path="/register" element={<Register></Register>}></Route>
