@@ -6,7 +6,7 @@ import moment from "moment";
 
 const Notification = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const { notifications, userChats, allUsers } = useContext(ChatContext);
+    const { notifications, userChats, allUsers, markAllNotificationsAsRead, markNotificationAsRead } = useContext(ChatContext);
     const { user } = useContext(AuthContext);
 
     const unreadNotifications = unreadNotificationsFunction(notifications);
@@ -40,7 +40,7 @@ const Notification = () => {
                     <h3>
                         Notifications
                     </h3>
-                    <div className="mark-as-read">
+                    <div className="mark-as-read" onClick={() => markAllNotificationsAsRead(notifications)}>
                         Mark all as read
                     </div>
                 </div>
@@ -48,7 +48,8 @@ const Notification = () => {
                     <span className="notification">No notifications</span> : null
                 }
                 {modifiedNotifications && modifiedNotifications.map((n, index) => {
-                    return (<div key={index} className={n.isRead ? "notification" : "notification not-read"}>
+                    return (<div key={index} className={n.isRead ? "notification" : "notification not-read"}
+                        onClick={() => { markNotificationAsRead(n, userChats, user, notifications), setIsOpen(false) }}>
                         <span>
                             {`${n.senderName} sent you a new message`}
                         </span>

@@ -199,6 +199,45 @@ export const ChatContextProvider = ({ children, user }) => {
 
     }, []);
 
+    const markAllNotificationsAsRead = useCallback((notifications) => {
+        const modifiedNotifications = notifications.map(n => {
+            return {
+                ...n,
+                isRead: true
+            }
+        });
+        setNotifications(modifiedNotifications);
+    }, []);
+
+    const markNotificationAsRead = useCallback((notification, userChats, user, notifications) => {
+        //  finding the right chat
+        const desiredChat = userChats?.find(chat => {
+            const chatMembers = [user._id, notification.senderId];
+            const isDesiredChat = chat?.members.every(member => {
+                return chatMembers.includes(member);
+            });
+
+            return isDesiredChat; // if true then the desiredChat will incude the chat
+        });
+
+        // mark as read
+        const modifiedNotifications = notifications.map(e => {
+            if (notification.senderId === e.senderId) {
+                return {
+                    ...notification,
+                    isRead: true
+                }
+            }
+            else {
+                return e;
+            }
+        });
+
+        updateCurrentChat(desiredChat);
+        setNotifications(modifiedNotifications);
+
+    }, []);
+
     const createChat = useCallback(async (firstId, secondId) => {
         const response = await postRequest(`${baseUrl}/chats`, JSON.stringify({
             firstId, secondId
@@ -227,7 +266,9 @@ export const ChatContextProvider = ({ children, user }) => {
         sendTextMessage,
         onlineUsers,
         notifications,
-        allUsers
+        allUsers,
+        markAllNotificationsAsRead,
+        markNotificationAsRead
     }}>
         {children}
     </ChatContext.Provider>
